@@ -13,6 +13,8 @@ let y = 0;
 
 let currentDirection = CARDINALS.N;
 
+let map = {};
+
 function fetchPath() {
   movements = input.split(', ');
 }
@@ -33,19 +35,25 @@ function findEasterFactory(){
     } else {
       currentDirection = mod(++currentDirection, 4);
     }
-
-    switch(currentDirection) {
-      case CARDINALS.N: y += distance;
-        break;
-      case CARDINALS.S: y -= distance;
-        break;
-      case CARDINALS.W: x -= distance;
-        break;
-      case CARDINALS.E: x += distance;
-        break;
-      default:
-        console.log('ERROR');
+    for(let j = 0; j < distance; ++j) {
+      switch(currentDirection) {
+        case CARDINALS.N: ++y;
+          break;
+        case CARDINALS.S: --y;
+          break;
+        case CARDINALS.W: --x;
+          break;
+        case CARDINALS.E: ++x;
+          break;
+        default:
+          console.log('ERROR');
+          return;
+      }
+      const cords = `${x},${y}`;
+      if (map[cords] === true) {
         return;
+      }
+      else map[cords] = true;
     }
   }
 }
