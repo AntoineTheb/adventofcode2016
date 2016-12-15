@@ -1,25 +1,36 @@
 'use strict';
 const md5 = require('md5');
-const input = `abc`;
+const input = `zpqevtbw`;
+// const input = 'abc';
+
+const memo = {};
+
+function getHash(i) {
+  const salt = `${input}${i}`;
+  let hash;
+  if (!memo[salt]) {
+    hash = salt;
+    for (let j = 0; j <= 2016; ++j)
+      hash = md5(hash);
+    memo[salt] = hash;
+  }
+  return memo[salt];
+}
 
 // hurray for the most inefficient answer ever !
 function keys() {
   let i;
   let max = 1000;
-  const memo = {};
   const potentials = [];
   const hashes = [];
   for (i=0;hashes.length < 64; ++i) {
-    let hash = `${input}${i}`;
-    for (let j = 0; j <= 2016; ++j)
-      memo[hash] = hash = memo[hash] || md5(hash);
+    let hash = getHash(i);
     const tmatches = hash.match(/(.)\1{2}/);
     if (tmatches) {
-      // console.log(hash, 'is a candidate');
       const tmatch = tmatches[0];
       for (let j = i + 1; j <= i + 1000; ++j) {
-        const fhash = md5(`${input}${j}`);
-        const fmatches = fhash.match(`${tmatch[0]}{5}`, 'g');
+        let fhash = getHash(j);
+        const fmatches = fhash.match(new RegExp(`${tmatch[0]}{5}`), 'g');
         if (fmatches) {
           const fmatch = fmatches[0].slice(0, 3);
           if (tmatch === fmatch) {
