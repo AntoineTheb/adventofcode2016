@@ -38,8 +38,8 @@ function assembunny() {
   for (let i = 0; i < commands.length;) {
     const [cm,x,y] = commands[i].split(' ');
     i += instrs[cm](x,y);
-    console.log(regs, cm, x, y, i);
   }
+  console.log(regs);
 }
 
 assembunny();
